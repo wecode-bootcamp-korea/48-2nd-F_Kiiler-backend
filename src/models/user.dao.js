@@ -18,7 +18,17 @@ const createUser = async (email, password) => {
 const getUserByEmail = async (email) => {
   const [user] = await AppDataSource.query(
     `
-      SELECT id, email, password, nickname, agreement_id, agree_app, agree_sms, agree_email, point
+      SELECT 
+      id, 
+      email,
+      password,
+      nickname,
+      agreement_id,
+      agree_app,
+      agree_sms,
+      agree_email, 
+      point
+
       FROM users
       WHERE email = ?
     `,
@@ -30,7 +40,17 @@ const getUserByEmail = async (email) => {
 const getUserById = async (id) => {
   const [user] = await AppDataSource.query(
     `
-      SELECT id, email, password, nickname, agreement_id, agree_app, agree_sms, agree_email, point
+      SELECT 
+      id, 
+      email,
+      password,
+      nickname,
+      agreement_id,
+      agree_app,
+      agree_sms,
+      agree_email, 
+      point
+      
       FROM users
       WHERE id = ?
     `,
