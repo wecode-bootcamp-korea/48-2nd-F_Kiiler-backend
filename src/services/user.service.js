@@ -37,4 +37,22 @@ const signUp = async (email, password) => {
   return createUser;
 };
 
-module.exports = { signUp, getUserById };
+const signIn = async (email, password) => {
+  const user = await userDao.getUserByEmail(email);
+
+  if (!user) {
+    const error = new Error("INVALID_USER");
+    error.statusCode = 401;
+    throw error;
+  }
+
+  const result = await bcrypt.compare(password, user.password);
+  if (!result) {
+    const error = new Error("INVALID_USER");
+    error.statusCode = 401;
+    throw error;
+  }
+  return jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET);
+};
+
+module.exports = { signUp, getUserById, signIn };

@@ -9,4 +9,12 @@ const signUp = catchAsync(async (req, res) => {
   res.status(201).json({ message: "user is created" });
 });
 
-module.exports = { signUp };
+const signIn = catchAsync(async (req, res) => {
+  const { email, password } = req.body;
+
+  const accessToken = await userService.signIn(email, password);
+
+  res.status(200).json({ message: "access token" });
+});
+
+module.exports = { signUp, signIn };
