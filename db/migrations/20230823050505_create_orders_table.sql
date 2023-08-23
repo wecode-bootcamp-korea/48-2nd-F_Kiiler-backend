@@ -4,7 +4,7 @@ CREATE TABLE orders (
   seller_id INT NOT NULL,
   buyer_id INT NOT NULL,
   bid_product_size_id INT NOT NULL,
-  order_num VARCHAR(100) NOT NULL,
+  order_number VARCHAR(100) NOT NULL,
   price DECIMAL(12,2) NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
