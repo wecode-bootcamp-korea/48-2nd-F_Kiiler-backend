@@ -1,10 +1,9 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-
 const userDao = require("../models/user.dao");
 
 const hashPassword = async (plaintextPassword) => {
-  const saltRounds = 10; // ~10 hashes/sec
+  const saltRounds = 10;
 
   return await bcrypt.hash(plaintextPassword, saltRounds);
 };
