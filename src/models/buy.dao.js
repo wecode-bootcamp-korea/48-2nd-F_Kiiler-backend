@@ -10,7 +10,7 @@ const getBuyList = async (prodcutId) => {
       s.type, 
       MIN(bb.price) AS buyPrice
       FROM bid_product_size bps
-      JOIN bid_buys bb
+      LEFT JOIN bid_buys bb
           ON bb.bid_product_size_id = bps.id
       JOIN products p
           ON p.id = bps.product_id
