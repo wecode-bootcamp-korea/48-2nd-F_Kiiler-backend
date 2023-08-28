@@ -5,7 +5,6 @@ const { catchAsync } = require('../utils/error');
 const getBuyList = catchAsync(async (req, res) => {
   const productId = req.params.id;
   const size = req.query.size;
-
   if (size) {
     const result = await buyDao.getBuySizeList(productId, size);
     result2 = await sellDao.getSellSize(productId, size);
