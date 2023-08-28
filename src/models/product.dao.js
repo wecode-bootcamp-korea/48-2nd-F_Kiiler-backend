@@ -24,16 +24,15 @@ const getProductById = async (productId) => {
 const getTradeProductById = async () => {
     const test2 = await AppDataSource.query(
         `
-        SELECT
+    SELECT
         s.type AS size,
         o.price AS tradePrice,
         DATE_FORMAT(o.created_at, '%y/%m/%d') AS tradeDate
-       
-        FROM
+    FROM
         orders o
-        JOIN
+    JOIN
         sizes s ON s.id = o.bid_product_size_id
-        ORDER BY
+    ORDER BY
         created_at DESC;
         `
     );
