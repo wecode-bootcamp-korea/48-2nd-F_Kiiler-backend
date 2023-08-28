@@ -1,10 +1,9 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-
 const userDao = require("../models/user.dao");
 
 const hashPassword = async (plaintextPassword) => {
-  const saltRounds = 10; // ~10 hashes/sec
+  const saltRounds = 10;
 
   return await bcrypt.hash(plaintextPassword, saltRounds);
 };
@@ -37,4 +36,22 @@ const signUp = async (email, password) => {
   return createUser;
 };
 
-module.exports = { signUp, getUserById };
+const signIn = async (email, password) => {
+  const user = await userDao.getUserByEmail(email);
+
+  if (!user) {
+    const error = new Error("INVALID_USER");
+    error.statusCode = 401;
+    throw error;
+  }
+
+  const result = await bcrypt.compare(password, user.password);
+  if (!result) {
+    const error = new Error("INVALID_USER");
+    error.statusCode = 401;
+    throw error;
+  }
+  return jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET);
+};
+
+module.exports = { signUp, getUserById, signIn };
