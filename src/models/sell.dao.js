@@ -3,15 +3,15 @@ const { AppDataSource } = require('./data.source');
 const getSellList = async (prodcutId) => {
   const sell = await AppDataSource.query(
     `SELECT 
-        bs.id, 
+        bps.id, 
         p.name,
         p.serial_number,
         pi.url,
         s.type, 
-        MAX(bs.price) AS price
-        FROM bid_sells bs
-        JOIN bid_product_size bps
-            ON bs.bid_product_size_id = bps.id
+        MAX(bs.price) AS sellPrice
+        FROM bid_product_size bps
+        LEFT JOIN bid_sells bs
+            ON bps.id = bs.bid_product_size_id
         JOIN products p
             ON p.id = bps.product_id
         JOIN product_images pi
@@ -31,10 +31,10 @@ const getSellSizeList = async (prodcutId, size) => {
     `SELECT 
           bs.id, 
           p.name,
-          p.serial_number,
+          p.serial_number as serialNumber,
           pi.url,
           s.type, 
-          MAX(bs.price) AS price
+          MAX(bs.price) AS sellPrice
           FROM bid_sells bs
           JOIN bid_product_size bps
               ON bs.bid_product_size_id = bps.id
@@ -52,4 +52,24 @@ const getSellSizeList = async (prodcutId, size) => {
   return sell;
 };
 
-module.exports = { getSellList, getSellSizeList };
+const getSellSize = async (prodcutId, size) => {
+  const sell = AppDataSource.query(
+    `SELECT 
+        MAX(bs.price) AS sellPrice
+        FROM bid_sells bs
+        JOIN bid_product_size bps
+        ON bs.bid_product_size_id = bps.id
+        JOIN products p
+        ON p.id = bps.product_id
+        JOIN product_images pi
+        ON pi.product_id = p.id
+        JOIN sizes s
+        ON s.id = bps.size_id
+        WHERE p.id = ? AND s.type = ?
+        GROUP BY s.type, p.id;`,
+    [prodcutId, size]
+  );
+  return sell;
+};
+
+module.exports = { getSellList, getSellSizeList, getSellSize };
