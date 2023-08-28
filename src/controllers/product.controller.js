@@ -13,9 +13,9 @@ const getProductById = catchAsync(async (req, res) => {
 const getTradeProductById = catchAsync(async (req, res) => {
   const { } = await req.query
 
-      const tradeData = await productService.getTradeProductById();
-      res.status(200).json(tradeData)
-    });
+    const tradeData = await productService.getTradeProductById();
+    res.status(200).json(tradeData)
+});
 
 
 module.exports = { getProductById, getTradeProductById };
