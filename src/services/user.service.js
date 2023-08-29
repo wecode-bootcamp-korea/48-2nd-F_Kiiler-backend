@@ -32,7 +32,13 @@ const signUp = async (email, password) => {
   }
 
   const hashedPassword = await hashPassword(password);
-  const createUser = await userDao.createUser(email, hashedPassword);
+  const createUser = await userDao.createUser(
+  email, 
+  hashedPassword,
+  agreeApp,
+  agreeSms,
+  agreeEmail
+  );
   return createUser;
 };
 
