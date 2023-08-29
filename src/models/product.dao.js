@@ -1,6 +1,6 @@
 const { AppDataSource } = require("./data.source");
 
-const getProductById = async (name) => {
+const getProductById = async (id) => {
   return await AppDataSource.query(
     `
     SELECT
@@ -17,7 +17,7 @@ const getProductById = async (name) => {
     WHERE 
     p.id = ?
     `,
-    [name]
+    [id]
   );
 };
 
