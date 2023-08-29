@@ -5,7 +5,7 @@ const getSellList = async (prodcutId) => {
     `SELECT 
         bps.id, 
         p.name,
-        p.serial_number,
+        p.serial_number as serialNumber,
         pi.url,
         s.type, 
         MAX(bs.price) AS sellPrice
@@ -29,7 +29,7 @@ const getSellList = async (prodcutId) => {
 const getSellSizeList = async (prodcutId, size) => {
   const sell = await AppDataSource.query(
     `SELECT 
-    bs.id, 
+    bps.id, 
     p.name,
     p.serial_number as serialNumber,
     pi.url,

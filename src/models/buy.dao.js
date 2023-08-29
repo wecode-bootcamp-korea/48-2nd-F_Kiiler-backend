@@ -5,7 +5,7 @@ const getBuyList = async (prodcutId) => {
     `SELECT 
       bps.id, 
       p.name,
-      p.serial_number,
+      p.serial_number as serialNumber,
       pi.url,
       s.type, 
       MIN(bb.price) AS buyPrice
@@ -31,7 +31,7 @@ const getBuySizeList = async (prodcutId, size) => {
     `SELECT 
     bps.id, 
     p.name,
-    p.serial_number,
+    p.serial_number as serialNumber,
     pi.url,
     s.type AS size, 
     MIN(bb.price) AS price
