@@ -11,27 +11,12 @@ const getProductById = catchAsync(async (req, res) => {
 
 
 const getTradeProductById = catchAsync(async (req, res) => {
-<<<<<<< HEAD
-  const { } = await req.query
 
-    const tradeData = await productService.getTradeProductById();
-    res.status(200).json(tradeData)
-});
-
-
-module.exports = { getProductById, getTradeProductById };
-
-
-
-
-=======
   const id  = req.params.id
   
       const tradeData = await productService.getTradeProductById(id);
       
       res.status(200).json({ data: tradeData })
 });
->>>>>>> feature/productinfo
-
 
 module.exports = { getProductById, getTradeProductById };
