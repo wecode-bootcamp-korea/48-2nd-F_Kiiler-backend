@@ -5,7 +5,7 @@ const getSellList = async (prodcutId) => {
     `SELECT 
         bps.id, 
         p.name,
-        p.serial_number,
+        p.serial_number AS serialNumber,
         pi.url,
         s.type AS size, 
         MAX(bs.price) AS price
@@ -35,17 +35,17 @@ const getSellSizeList = async (prodcutId, size) => {
           pi.url,
           s.type AS size, 
           MAX(bs.price) AS price
-          FROM bid_sells bs
-          JOIN bid_product_size bps
-              ON bs.bid_product_size_id = bps.id
-          JOIN products p
-              ON p.id = bps.product_id
-          JOIN product_images pi
-              ON pi.product_id = p.id
-          JOIN sizes s
-              ON s.id = bps.size_id
-          WHERE p.id = ? and s.type = ?
-          GROUP BY s.type;`,
+          FROM bid_product_size bps
+        LEFT JOIN bid_sells bs
+            ON bps.id = bs.bid_product_size_id
+        JOIN products p
+            ON p.id = bps.product_id
+        JOIN product_images pi
+            ON pi.product_id = p.id
+        JOIN sizes s
+            ON s.id = bps.size_id
+        WHERE p.id = ? AND s.type = ?
+        GROUP BY s.type;`,
     [prodcutId, size]
   );
 
@@ -56,17 +56,17 @@ const getSellSize = async (prodcutId, size) => {
   const sell = AppDataSource.query(
     `SELECT 
         MAX(bs.price) AS sellPrice
-        FROM bid_sells bs
-        JOIN bid_product_size bps
-        ON bs.bid_product_size_id = bps.id
+        FROM bid_product_size bps
+        LEFT JOIN bid_sells bs
+            ON bps.id = bs.bid_product_size_id
         JOIN products p
-        ON p.id = bps.product_id
+            ON p.id = bps.product_id
         JOIN product_images pi
-        ON pi.product_id = p.id
+            ON pi.product_id = p.id
         JOIN sizes s
-        ON s.id = bps.size_id
+            ON s.id = bps.size_id
         WHERE p.id = ? AND s.type = ?
-        GROUP BY s.type, p.id;`,
+        GROUP BY s.type;`,
     [prodcutId, size]
   );
   return sell;

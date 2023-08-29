@@ -14,7 +14,7 @@ const signIn = catchAsync(async (req, res) => {
 
   const accessToken = await userService.signIn(email, password);
 
-  res.status(200).json({ message: accessToken });
+  res.status(200).json({ accessToken });
 });
 
 module.exports = { signUp, signIn };
