@@ -7,8 +7,3 @@ productRouter.get("/productdata", productController.getProductById);
 productRouter.get("/tradedata/:id", productController.getTradeProductById)
 
 module.exports = { productRouter };
-
-
-
-
-

@@ -1,8 +1,7 @@
 const { AppDataSource } = require('./data.source')
  
-
 const getProductById = async (productId) => {
-     const test1 = await AppDataSource.query(
+    return await AppDataSource.query(
         `
     SELECT 
         p.id as productId,
@@ -17,12 +16,10 @@ const getProductById = async (productId) => {
         `,
         [productId]
      );
-     return test1;
-
 };
 
 const getTradeProductById = async (id) => {
-    const test2 = await AppDataSource.query(
+    return await AppDataSource.query(
         `
     SELECT
         s.type AS size,
@@ -37,9 +34,7 @@ const getTradeProductById = async (id) => {
         created_at DESC
         `,
         [id]
-    );
-        return test2;
-   
+    ); 
 };
 
 module.exports = { getProductById, getTradeProductById }
