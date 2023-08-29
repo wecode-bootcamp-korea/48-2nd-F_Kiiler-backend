@@ -8,8 +8,8 @@ const getProductById = async (productId) => {
 };
 
 
-const getTradeProductById = async () => {
-    return await productDao.getTradeProductById();
+const getTradeProductById = async (id) => {
+    return await productDao.getTradeProductById(id);
 }
 module.exports = { getProductById, getTradeProductById };
 
