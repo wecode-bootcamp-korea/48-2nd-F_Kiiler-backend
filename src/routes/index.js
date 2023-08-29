@@ -8,8 +8,3 @@ routes.use("/user", userRouter);
 routes.use('/product', productRouter);
 
 module.exports = { routes };
-
-
-
-
-
