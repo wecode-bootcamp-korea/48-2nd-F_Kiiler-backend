@@ -3,9 +3,9 @@ const { catchAsync } = require('../utils/error')
 
 
 const getProductById = catchAsync(async (req, res) => {
-  const { productId } = req.query
+  const id = req.params.id
 
-  const result = await productService.getProductById(productId);
+  const result = await productService.getProductById(id);
   res.status(200).json({ data: result });
 });
 
