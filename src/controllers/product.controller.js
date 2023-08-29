@@ -3,14 +3,15 @@ const { catchAsync } = require('../utils/error')
 
 
 const getProductById = catchAsync(async (req, res) => {
-  const { productId } = await req.query
- 
+  const { productId } = req.query
+
   const result = await productService.getProductById(productId);
-  res.status(200).json(result); 
+  res.status(200).json({ data: result });
 });
 
 
 const getTradeProductById = catchAsync(async (req, res) => {
+<<<<<<< HEAD
   const { } = await req.query
 
     const tradeData = await productService.getTradeProductById();
@@ -23,5 +24,14 @@ module.exports = { getProductById, getTradeProductById };
 
 
 
+=======
+  const id  = req.params.id
+  
+      const tradeData = await productService.getTradeProductById(id);
+      
+      res.status(200).json({ data: tradeData })
+});
+>>>>>>> feature/productinfo
 
 
+module.exports = { getProductById, getTradeProductById };
