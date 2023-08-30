@@ -6,10 +6,9 @@ const getProductDetailById = async (productId) => {
 
 const getTradeProductById = async (productId) => {
     const tradeAllOfProduct = await productDao.getTradeProductById(productId);
-
+    
     return {
-        tradeAllOfProduct: tradeAllOfProduct[0],
-        tradeLimit: tradeAllOfProduct[1]
+        tradeAllOfProduct: tradeAllOfProduct[0]
     }
 }
 

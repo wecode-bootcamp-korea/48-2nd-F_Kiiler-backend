@@ -40,6 +40,7 @@ const getTradeProductById = async (productId) => {
           o.id = ?
       ORDER BY
           created_at DESC
+      LIMIT 5
      `,
       [productId]
     )
@@ -59,7 +60,8 @@ const getTradeProductById = async (productId) => {
       WHERE 
           bps.product_id = ?
       GROUP BY
-          s.type, bs.price;
+          s.type, bs.price
+      LIMIT 5
       `,
       [productId]
     )
@@ -77,27 +79,20 @@ const getTradeProductById = async (productId) => {
       JOIN 
           sizes s ON s.id = bps.size_id
       WHERE 
-          bps.product_id = ?
+          bps.product_id = 1
       GROUP BY
-          s.type, bb.price;
+          s.type, bb.price
+      LIMIT 5
       `,
       [productId]
     );
-    
-    const tradeDataLimit = allTradeData.slice(0,5)
-    const bidSellDataLimit = allBidSellData.slice(0,5)
-    const bidBuyDataLimit = allBidBuyData.slice(0,5)
         
-    const all = [{
+    const all = {
             allTradeData,
             allBidSellData,
-            allBidBuyData}]
-
-    const limit = [{
-            tradeDataLimit,
-            bidSellDataLimit,
-            bidBuyDataLimit}]
-    return [all, limit]
+            allBidBuyData}
+            
+    return [all]
 };
 
 module.exports = { getProductDetailById, getTradeProductById }
