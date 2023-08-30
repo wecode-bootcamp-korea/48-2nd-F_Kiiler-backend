@@ -233,4 +233,7 @@ tags
 #schema.sql
 db/schema.sql
 
+#data-insert.js
+data-insert.js
+
 # End of https://www.toptal.com/developers/gitignore/api/vim,macos,node,linux,visualstudiocode,dotenv
