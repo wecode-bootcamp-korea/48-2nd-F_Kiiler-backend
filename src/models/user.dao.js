@@ -63,7 +63,7 @@ const getUserById = async (id) => {
         agree_email,
         point
     FROM users
-    WHERE p.id = ?
+    WHERE id = ?
 `,
     [id]
   );
