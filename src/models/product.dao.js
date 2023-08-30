@@ -25,9 +25,95 @@ const getProductDetailById = async (productId) => {
      );
 };
 
+const getRecentTradeDataById = async (productId) => {
+    const [recentTradeData] = await AppDataSource.query(
+     ` 
+      SELECT
+          bid_product_size.id AS sizeId,
+          s.type AS sizeType,
+          SUM(orders.price) AS totalOrderPrice
+      FROM
+          bid_product_size
+      LEFT JOIN
+         orders ON orders.bid_product_size_id = bid_product_size.id
+      JOIN
+         sizes s ON s.id = bid_product_size.size_id
+      WHERE
+          bid_product_size.product_id = ?
+      GROUP BY
+          bid_product_size.id, s.type
+      ORDER BY
+          totalOrderPrice ASC
+      LIMIT 1
+     `,
+      [productId]
+    );
+    return recentTradeData
+};
+
+const getBuyPrice = async (productId) => {
+    const [buyPrice] = await AppDataSource.query(
+     ` 
+      SELECT p.id, 
+          min(bb.price) AS price
+      FROM 
+          bid_product_size bps
+      LEFT JOIN 
+          bid_buys bb ON bb.bid_product_size_id = bps.id
+      JOIN 
+          products p ON p.id = bps.product_id
+      JOIN 
+          product_images pi ON pi.product_id = p.id
+      JOIN 
+          sizes s ON s.id = bps.size_id
+      JOIN 
+          brands b ON b.id = p.brand_id
+      JOIN 
+          categories c ON c.id = p.category_id
+      WHERE p.id = ?
+      GROUP BY 
+          p.id, 
+          b.name, 
+          p.name, 
+          pi.url
+     `,
+      [productId]
+    );
+    return buyPrice
+};
+
+const getSellPrice = async (productId) => {
+    const [sellPrice] = await AppDataSource.query(
+     ` 
+      SELECT 
+          p.id,
+          max(bs.price) AS price
+      FROM 
+          bid_product_size bps
+      LEFT JOIN 
+          bid_sells bs ON bs.bid_product_size_id = bps.id
+      JOIN 
+           products p ON p.id = bps.product_id
+      JOIN 
+          sizes s ON s.id = bps.size_id
+      JOIN 
+          brands b ON b.id = p.brand_id
+      JOIN 
+          categories c ON c.id = p.category_id
+      WHERE p.id = ?
+      GROUP BY 
+          p.id, 
+          b.name, 
+          p.name
+     `,
+      [productId]
+    );
+    return sellPrice
+};
+
 const getTradeProductById = async (productId) => {
     const allTradeData = await AppDataSource.query(
-        `
+     `
       SELECT
           s.type AS size,
           o.price AS tradePrice,
@@ -41,12 +127,12 @@ const getTradeProductById = async (productId) => {
       ORDER BY
           created_at DESC
       LIMIT 5
-     `,
+      `,
       [productId]
     )
 
     const allBidSellData = await AppDataSource.query(
-        `
+     `
       SELECT 
           s.type AS size, 
           bs.price AS sellTargetPrice,
@@ -67,7 +153,7 @@ const getTradeProductById = async (productId) => {
     )
 
     const allBidBuyData = await AppDataSource.query(
-        `
+     `
       SELECT 
           s.type AS size, 
           bb.price AS buyTargetPrice,
@@ -95,4 +181,4 @@ const getTradeProductById = async (productId) => {
     return [all]
 };
 
-module.exports = { getProductDetailById, getTradeProductById }
+module.exports = { getProductDetailById, getBuyPrice, getSellPrice, getRecentTradeDataById, getTradeProductById }
