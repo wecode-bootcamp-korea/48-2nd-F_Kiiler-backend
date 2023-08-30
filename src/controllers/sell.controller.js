@@ -6,15 +6,16 @@ const getSellList = catchAsync(async (req, res) => {
   const productId = req.params.id;
   const size = req.query.size;
 
+  const result = size
+    ? await sellDao.getSellSizeList(productId, size)
+    : await sellDao.getSellList(productId);
+
   if (size) {
-    const result = await sellDao.getSellSizeList(productId, size);
-    result2 = await buyDao.getBuySize(productId, size);
+    const result2 = await buyDao.getBuySize(productId, size);
     result[0]['buyPrice'] = result2[0]['buyPrice'];
-    res.status(201).json({ data: result });
-  } else {
-    const result = await sellDao.getSellList(productId);
-    res.status(201).json({ data: result });
   }
+
+  res.status(201).json({ data: result });
 });
 
 module.exports = { getSellList };
