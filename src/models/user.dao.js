@@ -5,7 +5,8 @@ const createUser = async (
   hashedpassword,
   agreeApp, 
   agreeSms, 
-  agreeEmail) => {
+  agreeEmail
+) => {
   await AppDataSource.query(
     `
     INSERT INTO users (
@@ -13,7 +14,7 @@ const createUser = async (
       password,
       agree_app,
       agree_sms,
-      agree_email  
+      agree_email      
     ) VALUES (
       ?,
       ?,
@@ -22,7 +23,7 @@ const createUser = async (
       ?
     )
     `,
-    [email, hashedpassword, agreeApp, agreeSms, agreeEmail]
+    [email, hashedPassword, agreeApp, agreeSms, agreeEmail]
   );
 };
 
@@ -47,6 +48,7 @@ const getUserByEmail = async (email) => {
 
   return user;
 };
+
 const getUserById = async (id) => {
   const [user] = await AppDataSource.query(
     `
@@ -61,7 +63,7 @@ const getUserById = async (id) => {
         agree_email,
         point
     FROM users
-    WHERE id = ?
+    WHERE p.id = ?
 `,
     [id]
   );
