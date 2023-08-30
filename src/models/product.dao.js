@@ -1,45 +1,31 @@
 const { AppDataSource } = require('./data.source')
- 
-const getProductById = async (productId) => {
-    return await AppDataSource.query(
-      `
-      SELECT
-          p.id as productId,
-          b.name as brand,
-          p.name,
-          i.url as productImage
-      FROM 
-          products p
-      LEFT JOIN 
-          brands b ON p.brand_id = b.id
-      JOIN 
-          product_images i ON p.id = i.product_id
-      WHERE 
-      p.id = ?
-      `,
-      [productId]
-    );
-  };
 
-const getProductDetailById = async (id) => {
+const getProductDetailById = async (productId) => {
     return await AppDataSource.query(
       `
       SELECT 
           p.id as productId,
+          b.name as brand,
+          p.name as name,
+          i.url as productImage,
           p.serial_number AS serialNumber,
-          p.price,
-          DATE_FORMAT (p.release_date, '%y/%m/%d') AS releaseDate,
-          p.color
+          p.color,
+          p.price as releasePrice,
+          DATE_FORMAT (p.release_date, '%y/%m/%d') AS releaseDate
       FROM
           products AS p
+      JOIN 
+          brands b ON p.brand_id = b.id
+      JOIN 
+          product_images i ON p.id = i.product_id
       WHERE
           p.id = ?
       `,
-      [id]
+      [productId]
      );
 };
 
-const getTradeProductById = async (id) => {
+const getTradeProductById = async (productId) => {
     const allTradeData = await AppDataSource.query(
         `
       SELECT
@@ -55,7 +41,7 @@ const getTradeProductById = async (id) => {
       ORDER BY
           created_at DESC
      `,
-      [id]
+      [productId]
     )
 
     const allBidSellData = await AppDataSource.query(
@@ -75,7 +61,7 @@ const getTradeProductById = async (id) => {
       GROUP BY
           s.type, bs.price;
       `,
-      [id]
+      [productId]
     )
 
     const allBidBuyData = await AppDataSource.query(
@@ -95,7 +81,7 @@ const getTradeProductById = async (id) => {
       GROUP BY
           s.type, bb.price;
       `,
-      [id]
+      [productId]
     );
     
     const tradeDataLimit = allTradeData.slice(0,5)
@@ -114,4 +100,4 @@ const getTradeProductById = async (id) => {
     return [all, limit]
 };
 
-module.exports = { getProductById, getProductDetailById, getTradeProductById }
+module.exports = { getProductDetailById, getTradeProductById }

@@ -1,15 +1,11 @@
 const productDao = require("../models/product.dao");
 
-const getProductDetail = async (productId) => {
-    return await productDao.getProductById(productId);
-  };
-
-const getProductDetailById = async (id) => {
-    return await productDao.getProductDetailById(id);
+const getProductDetailById = async (productId) => {
+    return await productDao.getProductDetailById(productId);
 };
 
-const getTradeProductById = async (id) => {
-    const tradeAllOfProduct = await productDao.getTradeProductById(id);
+const getTradeProductById = async (productId) => {
+    const tradeAllOfProduct = await productDao.getTradeProductById(productId);
 
     return {
         tradeAllOfProduct: tradeAllOfProduct[0],
@@ -17,4 +13,4 @@ const getTradeProductById = async (id) => {
     }
 }
 
-module.exports = { getProductDetail, getProductDetailById, getTradeProductById };
+module.exports = { getProductDetailById, getTradeProductById };
