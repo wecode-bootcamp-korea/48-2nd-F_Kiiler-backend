@@ -4,6 +4,7 @@ const bidController = require('../controllers/bid.controller');
 
 const bidRouter = express.Router();
 
-bidRouter.post('/bidSell', bidController.insertBidSellOrOrder);
-bidRouter.post('/bidBuy', bidController.insertBidBuyOrOrder);
+bidRouter.post('/sell', bidController.insertBidSellWaiting);
+bidRouter.post('/sellOrOrder', bidController.insertBidSellOrOrder);
+
 module.exports = { bidRouter };

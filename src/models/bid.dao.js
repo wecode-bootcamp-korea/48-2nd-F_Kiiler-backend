@@ -23,7 +23,64 @@ const searchBidProductSize = async (productId, getSizeId) => {
   return searchBidProductSize;
 };
 
-//Sell module//
+const existingBidBuyInfo = async (status, bidProductSizeId, price) => {
+  const [bidBuyInfo] = await AppDataSource.query(
+    `select 
+      id,
+      buyer_id 
+      from bid_buys 
+      where status = ?
+      and bid_product_size_id = ?
+      and price = ? 
+      order by created_at  
+      limit 1`,
+    [status, bidProductSizeId, price]
+  );
+
+  return bidBuyInfo;
+};
+
+const existingBidSellInfo = async (
+  sellerId,
+  status,
+  bidProductSizeId,
+  price
+) => {
+  const [bidSellInfo] = await AppDataSource.query(
+    `select 
+      id
+      from bid_sells 
+      where seller_id = ?
+      and status = ?
+      and bid_product_size_id = ?
+      and price = ? 
+      order by created_at
+      limit 1`,
+    [sellerId, status, bidProductSizeId, price]
+  );
+  return bidSellInfo;
+};
+
+const modifyStatusBidBuy = async (status, bidBuyId) => {
+  const modifyStatusBidBuy = AppDataSource.query(
+    `update 
+      bid_buys 
+      set status = ?
+      where id = ?`,
+    [status, bidBuyId]
+  );
+};
+
+const modifyStatusBidSell = async (status, bidSellId) => {
+  const modifyStatusBidSell = AppDataSource.query(
+    `update 
+      bid_sells 
+      set status = ?
+      where id = ?`,
+    [status, bidSellId]
+  );
+};
+
 const insertBidSell = async (sellerId, bidProductSizeId, status, price) => {
   const insertBidSell = await AppDataSource.query(
     `insert into 
@@ -35,23 +92,7 @@ const insertBidSell = async (sellerId, bidProductSizeId, status, price) => {
   return insertBidSell;
 };
 
-const searchBidBuyInfo = async (bidProductSizeId, price) => {
-  const bidBuyInfo = await AppDataSource.query(
-    `select 
-      id,
-      buyer_id 
-      from bid_buys 
-      where bid_product_size_id = ?
-      and price = ? 
-      and status = "구매입찰" 
-      order by created_at  
-      limit 1`,
-    [bidProductSizeId, price]
-  );
-  return bidBuyInfo[0];
-};
-
-const getBidSell = async (sellerId, bidSellId) => {
+const getBidSell = async (bidSellId) => {
   const getBidSell = await AppDataSource.query(
     `select 
       bid_sells.id AS order_sell_number, 
@@ -75,21 +116,10 @@ const getBidSell = async (sellerId, bidSellId) => {
       on products.brand_id = brands.id
       left join product_images 
       on product_images.product_id = products.id
-      where bid_sells.seller_id = ?
-      and bid_sells.id = ?`,
-    [sellerId, bidSellId]
+      where bid_sells.id = ?`,
+    [bidSellId]
   );
   return getBidSell;
-};
-
-const modifyStatusBidBuy = async (bidBuyId) => {
-  const modifyStatusBidBuy = AppDataSource.query(
-    `update 
-      bid_buys 
-      set status = "입찰완료" 
-      where id = ?`,
-    [bidBuyId]
-  );
 };
 
 const insertOrder = async (
@@ -142,87 +172,15 @@ const searchOrder = async (orderId) => {
   return getOrderInfo;
 };
 
-//Buys Module//
-const insertBidBuy = async (buyerId, bidProductSizeId, status, price) => {
-  const insertBidBuy = await AppDataSource.query(
-    `insert into 
-      bid_buys
-      (buyer_id,bid_product_size_id,status,price) 
-      values (?,?,?,?)`,
-    [buyerId, bidProductSizeId, status, price]
-  );
-  return insertBidBuy;
-};
-
-const getBidBuy = async (buyerId, bidSellId) => {
-  const getBidBuy = await AppDataSource.query(
-    `select 
-      bid_buys.id AS order_sell_number, 
-      bid_buys.buyer_id,
-      bid_buys.status,
-      bid_buys.price, 
-      categories.name AS category ,
-      brands.name AS brand,
-      products.name AS product, 
-      products.serial_number,
-      products.color , 
-      product_images.url
-      from bid_buys 
-      inner join bid_product_size 
-      on bid_buys.bid_product_size_id = bid_product_size.id 
-      left join products 
-      on bid_product_size.product_id = products.id
-      left join categories 
-      on products.category_id = categories.id
-      left join brands 
-      on products.brand_id = brands.id
-      left join product_images 
-      on product_images.product_id = products.id
-      where bid_buys.buyer_id = ?
-      and bid_buys.id = ?`,
-    [buyerId, bidSellId]
-  );
-  return getBidBuy;
-};
-
-const searchBidSellInfo = async (bidProductSizeId, price) => {
-  const BidSellInfo = await AppDataSource.query(
-    `select 
-      bid_sells.id,
-      bid_sells.seller_id 
-      from bid_sells 
-      where bid_product_size_id = ?
-      and price = ? 
-      and status = "판매입찰" 
-      order by created_at 
-      limit 1`,
-    [bidProductSizeId, price]
-  );
-  return BidSellInfo[0];
-};
-
-const modifyStatusBidSell = async (bidSellId) => {
-  const modifyStatusBidSell = AppDataSource.query(
-    `update 
-      bid_sells 
-      set status = "입찰완료" 
-      where id = ?`,
-    [bidSellId]
-  );
-  return modifyStatusBidSell;
-};
-
 module.exports = {
   getSizeId,
   searchBidProductSize,
   insertBidSell,
-  insertBidBuy,
   getBidSell,
-  getBidBuy,
-  searchBidBuyInfo,
-  searchBidSellInfo,
   insertOrder,
   modifyStatusBidBuy,
   modifyStatusBidSell,
   searchOrder,
+  existingBidSellInfo,
+  existingBidBuyInfo,
 };
