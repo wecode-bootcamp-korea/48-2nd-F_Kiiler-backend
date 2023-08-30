@@ -1,6 +1,6 @@
 const { AppDataSource } = require('./data.source')
  
-const getProductById = async (id) => {
+const getProductDetailById = async (id) => {
     return await AppDataSource.query(
         `
     SELECT 
@@ -37,4 +37,4 @@ const getTradeProductById = async (id) => {
     ); 
 };
 
-module.exports = { getProductById, getTradeProductById }
+module.exports = { getProductDetailById, getTradeProductById }
