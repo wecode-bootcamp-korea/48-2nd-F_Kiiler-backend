@@ -40,7 +40,8 @@ const getTradeProductById = async (id) => {
         `
     SELECT 
         s.type AS size, 
-        bs.price AS sellPrice
+        bs.price AS sellTargetPrice,
+        COUNT(bs.price) AS amount
     FROM 
         bid_product_size bps
     JOIN 
@@ -49,6 +50,8 @@ const getTradeProductById = async (id) => {
         sizes s ON s.id = bps.size_id
     WHERE 
         bps.product_id = ?
+    GROUP BY
+        s.type, bs.price;
         `,
         [id]
     )
@@ -57,7 +60,8 @@ const getTradeProductById = async (id) => {
         `
     SELECT 
         s.type AS size, 
-        bb.price AS buyPrice
+        bb.price AS buyTargetPrice,
+        COUNT(bb.price) AS amount
     FROM 
         bid_product_size bps
     JOIN 
@@ -65,9 +69,13 @@ const getTradeProductById = async (id) => {
     JOIN 
         sizes s ON s.id = bps.size_id
     WHERE 
-        bps.product_id = 1;
-        `
+        bps.product_id = ?
+    GROUP BY
+        s.type, bb.price;
+        `,
+        [id]
     );
+    
     const tradeDataLimit = allTradeData.slice(0,5)
     const bidSellDataLimit = allBidSellData.slice(0,5)
     const bidBuyDataLimit = allBidBuyData.slice(0,5)
