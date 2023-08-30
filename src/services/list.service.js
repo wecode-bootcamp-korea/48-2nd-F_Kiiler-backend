@@ -1,68 +1,40 @@
-// const buyDao = require('../models/buy.dao');
-// const getBuyPrice = async (productId) => {
-//   //   await buyDao.getBuyList(productId);
-//   let ids = [];
-//   const get = await listDao.getProductList();
-//   for (let j = 0; j < get.length; j++) {
-//     let id = get[j]['id'];
-//     ids.push(id);
-//   }
-//   console.log(ids);
-//   //   for (let i = 0; i < getPrice.length; i++) {
-//   //     console.log(getPrice[i]['price']);
-//   //   }
-// };
-
-// module.exports = { getBuyPrice };
 const listDao = require('../models/list.dao');
 
-class ListingQueryBuilder {
-  constructor(filterOptions) {
-    this.filterOptions = filterOptions;
-  }
-
-  listingBrandFilterBuilder(listingBrands) {
-    const quotedBrands = listingBrands.map((brand) => `'${brand}'`).join(', ');
-    console.log(listingBrands);
-    console.log(quotedBrands);
-    return `b.name IN (${quotedBrands})`;
-  }
-
-  listingCategoryFilterBuilder(listinCategories) {
-    const quotedCategories = listinCategories
-      .map((category) => `'${category}'`)
-      .join(', ');
-    return `c.name IN (${quotedCategories})`;
-  }
-
-  buildWhereClause() {
-    const builderSet = {
-      brand: this.listingBrandFilterBuilder,
-      category: this.listingCategoryFilterBuilder,
-    };
-
-    const whereClauses = Object.entries(this.filterOptions).map(
-      ([key, value]) => builderSet[key](value)
-    );
-
-    console.log('whereClauses : ', whereClauses);
-
-    if (whereClauses.length !== 0) {
-      return `WHERE ${whereClauses.join(' AND ')}`;
-    } else {
-      return '';
+const categoryService = async (sortBy, brand, category, limit, offset) => {
+  const ordering = async (sortBy) => {
+    switch (sortBy) {
+      case 'price':
+        return 'ORDER BY bb.price DESC';
+      default:
+        return 'ORDER BY bb.price';
     }
-  }
+  };
 
-  build() {
-    const filterQuery = this.buildWhereClause();
+  const getCategory = async (brand, category) => {
+    if (!brand && !category) {
+      return '';
+    } else if (brand && !category) {
+      return `WHERE b.name in (${brand})`;
+    } else if (!brand && category) {
+      return `WHERE c.name in (${category})`;
+    } else {
+      return `WHERE b.name in (${brand}) AND c.name in (${category})`;
+    }
+  };
 
-    // if (filterQuery) {
-    return filterQuery;
-    // } else {
-    //   return '';
-    // }
-  }
-}
+  const getPage = async (limit, offset) => {
+    offset = (offset - 1) * limit;
+    return `LIMIT ${limit} OFFSET ${offset}`;
+  };
 
-module.exports = { ListingQueryBuilder };
+  const orderingQuery = await ordering(sortBy);
+  const whereQuery = await getCategory(brand, category);
+  const pageQuery = await getPage(limit, offset);
+  return await listDao.getProductsByCategorylist(
+    orderingQuery,
+    whereQuery,
+    pageQuery
+  );
+};
+
+module.exports = { categoryService };
