@@ -8,7 +8,12 @@ const getProductDetailById = async (id) => {
 };
 
 const getTradeProductById = async (id) => {
-    return await productDao.getTradeProductById(id);
+    const tradeAllOfProduct = await productDao.getTradeProductById(id);
+
+    return {
+        tradeAllOfProduct: tradeAllOfProduct[0],
+        tradeLimit: tradeAllOfProduct[1]
+    }
 }
 
 module.exports = { getProductDetailById, getTradeProductById };
