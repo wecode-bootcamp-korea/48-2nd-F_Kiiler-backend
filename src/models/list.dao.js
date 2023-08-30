@@ -6,7 +6,7 @@ const getProductsByCategorylist = async (
   pageQuery
 ) => {
   const list = await AppDataSource.query(`
-    SELECT p.id, b.name as brand, p.name, pi.url, min(bb.price) AS price
+    SELECT p.id AS productId, b.name as brand, p.name, pi.url, min(bb.price) AS price
     FROM bid_product_size bps
     LEFT JOIN bid_buys bb ON bb.bid_product_size_id = bps.id
     JOIN products p ON p.id = bps.product_id
