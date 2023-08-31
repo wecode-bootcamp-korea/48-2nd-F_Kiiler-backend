@@ -8,9 +8,9 @@ const getProductDetailById = async (productId) => {
   const tradeAllOfProduct = await productDao.getTradeProductById(productId);
   const allSizePrice = await productDao.getRecentPrice(productId);
 
-  const recentPrice = recent.totalOrderPrice;
-  const recentBuyPrice = buyPrice.price;
-  const recentSellPrice = sellPrice.price;
+  const recentPrice = recent.recentPrice;
+  const recentBuyPrice = buyPrice.recentBuyPrice;
+  const recentSellPrice = sellPrice.recentSellPrice;
 
   result[0]['recentTrade'] = recentPrice;
   result[0]['buyPrice'] = recentBuyPrice;
