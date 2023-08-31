@@ -37,7 +37,6 @@ const existingBidSellInfo = async (status, bidProductSizeId, price) => {
       limit 1`,
     [status, bidProductSizeId, price]
   );
-
   return bidSellInfo;
 };
 
@@ -93,7 +92,8 @@ const modifyAndInsertBidBuy = async (
   }
 };
 
-const insertOnlyBidSell = async (buyerId, bidProductSizeId, status, price) => {
+const insertOnlyBidBuy = async (buyerId, bidProductSizeId, status, price) => {
+  console.log(buyerId, bidProductSizeId, status, price);
   const queryRunner = await AppDataSource.createQueryRunner();
   await queryRunner.connect();
   await queryRunner.startTransaction();
@@ -174,7 +174,7 @@ const insertOrder = async (
   }
 };
 
-const modifyBidSell = async (status, bidBuyId, point, buyerId) => {
+const modifyBidBuy = async (status, bidBuyId, point, buyerId) => {
   const queryRunner = await AppDataSource.createQueryRunner();
   await queryRunner.connect();
   await queryRunner.startTransaction();
@@ -208,7 +208,8 @@ const getBidBuy = async (bidBuyId) => {
       users.point , 
       products.name AS product,  
       products.serial_number, 
-      sizes.type,  bid_buys.price,  
+      sizes.type,  
+      bid_buys.price,  
       product_images.url 
       from bid_buys 
       left join bid_product_size 
@@ -216,7 +217,7 @@ const getBidBuy = async (bidBuyId) => {
       left join sizes 
       on bid_product_size.size_id = sizes.id 
       left join users 
-      on bid_buys.seller_id = users.id 
+      on bid_buys.buyer_id = users.id 
       left join products  
       on bid_product_size.product_id = products.id 
       left join product_images 
@@ -259,7 +260,7 @@ module.exports = {
   searchOrder,
   existingBidSellInfo,
   existingBidBuyInfo,
-  insertOnlyBidSell,
+  insertOnlyBidBuy,
   modifyAndInsertBidBuy,
-  modifyBidSell,
+  modifyBidBuy,
 };

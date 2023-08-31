@@ -33,14 +33,15 @@ const existingBidSell = async (sellerId, status, bidProductSizeId, price) => {
 
 const insertBidSellWaiting = async (sellerId, productId, size, price) => {
   let status = bidStatusEnum.BUY_CONFIRMED;
+
   const bidProductSizeId = await searchBidProductSize(productId, size);
+
   const existingBidBuyInfo = await existingBidBuy(
     status,
     bidProductSizeId,
     price
   );
   status = bidStatusEnum.WAIT_CONFIRMED;
-
   let bidSellId;
   if (existingBidBuyInfo) {
     const bidBuyId = existingBidBuyInfo.id;
