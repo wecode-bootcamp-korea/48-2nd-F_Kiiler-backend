@@ -48,6 +48,7 @@ const getUserByEmail = async (email) => {
 
   return user;
 };
+
 const getUserById = async (id) => {
   const [user] = await AppDataSource.query(
     `
