@@ -9,32 +9,26 @@ const insertBidSellWaiting = catchAsync(async (req, res) => {
     size,
     price
   );
-
   res.status(201).json({ data: bidSell });
 });
 
+const getBidSell = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const getBidSell = await bidService.getBidSell(id);
+  res.status(201).json({ data: getBidSell });
+});
+
 const insertBidSellOrOrder = catchAsync(async (req, res) => {
-  const { sellerId, productId, size, price } = req.body;
+  const { sellerId, productId, size, price, orderPrice, point } = req.body;
   const bidSellOrOrder = await bidService.insertBidSellOrOrder(
     sellerId,
     productId,
     size,
-    price
+    price,
+    orderPrice,
+    point
   );
-
   res.status(201).json({ data: bidSellOrOrder });
 });
 
-// const insertBidBuyOrOrder = catchAsync(async (req, res) => {
-//   const { buyerId, productId, size, price } = req.body;
-//   const bidBuyOrOrder = await bidService.insertBidBuyOrOrder(
-//     buyerId,
-//     productId,
-//     size,
-//     price
-//   );
-
-//   res.status(201).json({ data: bidBuyOrOrder });
-// });
-
-module.exports = { insertBidSellWaiting, insertBidSellOrOrder };
+module.exports = { insertBidSellWaiting, getBidSell, insertBidSellOrOrder };

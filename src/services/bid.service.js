@@ -40,26 +40,43 @@ const insertBidSellWaiting = async (sellerId, productId, size, price) => {
     price
   );
   status = bidStatusEnum.WAIT_CONFIRMED;
+
+  let bidSellId;
   if (existingBidBuyInfo) {
     const bidBuyId = existingBidBuyInfo.id;
-    const modifyStatusBidBuy = await bidDao.modifyStatusBidBuy(
+    const modifyAndInsertBidSell = await bidDao.modifyAndInsertBidSell(
+      bidBuyId,
+      sellerId,
+      bidProductSizeId,
       status,
-      bidBuyId
+      price
     );
+    bidSellId = modifyAndInsertBidSell;
+  } else if (!existingBidBuyInfo) {
+    const insertOnlyBidSell = await bidDao.insertOnlyBidSell(
+      sellerId,
+      bidProductSizeId,
+      status,
+      price
+    );
+    bidSellId = insertOnlyBidSell;
   }
+  return bidSellId;
+};
 
-  const insertBidSell = await bidDao.insertBidSell(
-    sellerId,
-    bidProductSizeId,
-    status,
-    price
-  );
-  const bidSellId = insertBidSell.insertId;
+const getBidSell = async (bidSellId) => {
   const getBidSell = await bidDao.getBidSell(bidSellId);
   return getBidSell;
 };
 
-const insertBidSellOrOrder = async (sellerId, productId, size, price) => {
+const insertBidSellOrOrder = async (
+  sellerId,
+  productId,
+  size,
+  price,
+  orderPrice,
+  point
+) => {
   let status = bidStatusEnum.WAIT_CONFIRMED;
   const bidProductSizeId = await searchBidProductSize(productId, size);
   const existingBidBuyInfo = await existingBidBuy(
@@ -67,59 +84,53 @@ const insertBidSellOrOrder = async (sellerId, productId, size, price) => {
     bidProductSizeId,
     price
   );
-  console.log(existingBidBuyInfo);
-  let bidBuyId;
-  let bidBuyerId;
-
   const existingBidSellInfo = await existingBidSell(
     sellerId,
     status,
     bidProductSizeId,
     price
   );
-  const bidSellId = existingBidSellInfo.id;
 
+  let bidBuyId;
+  let bidBuyerId;
+  let bidSellId = existingBidSellInfo;
   status = bidStatusEnum.ORDER_CONFIRMED;
 
   if (existingBidBuyInfo) {
     bidBuyId = existingBidBuyInfo.id;
     bidBuyerId = existingBidBuyInfo.buyer_id;
     const shortUuid = uuid.v4().substr(0, 8);
-    const modifyStatusBidBuy = await bidDao.modifyStatusBidBuy(
-      status,
-      bidBuyId
-    );
-
-    const modifyStatusBidSell = await bidDao.modifyStatusBidSell(
-      status,
-      bidSellId
-    );
-
+    bidSellId = existingBidSellInfo.id;
     const insertOrder = await bidDao.insertOrder(
+      status,
+      bidBuyId,
+      bidSellId,
+      point,
       sellerId,
       bidBuyerId,
       bidProductSizeId,
       shortUuid,
-      price
+      orderPrice
     );
-    const orderId = insertOrder.insertId;
-    const getOrderInfo = await bidDao.searchOrder(orderId);
+    const getOrderInfo = await bidDao.searchOrder(insertOrder);
     return getOrderInfo;
   } else if (!existingBidBuyInfo) {
     const status = bidStatusEnum.SELL_CONFIRMED;
-    const modifyStatusBidSell = await bidDao.modifyStatusBidSell(
+    bidSellId = existingBidSellInfo.id;
+    const modifyBidSell = bidDao.modifyBidSell(
       status,
-      bidSellId
+      bidSellId,
+      point,
+      sellerId
     );
+
     const getBidSell = await bidDao.getBidSell(bidSellId);
     return getBidSell;
   }
 };
 
 module.exports = {
-  existingBidSell,
-  existingBidBuy,
-  searchBidProductSize,
   insertBidSellWaiting,
   insertBidSellOrOrder,
+  getBidSell,
 };
