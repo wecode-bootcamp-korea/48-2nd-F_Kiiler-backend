@@ -1,10 +1,10 @@
-const { AppDataSource } = require("./data.source");
+const { AppDataSource } = require('./data.source');
 
 const createUser = async (
-  email, 
-  hashedpassword,
-  agreeApp, 
-  agreeSms, 
+  email,
+  hashedPassword,
+  agreeApp,
+  agreeSms,
   agreeEmail
 ) => {
   await AppDataSource.query(
@@ -63,7 +63,7 @@ const getUserById = async (id) => {
         agree_email,
         point
     FROM users
-    WHERE p.id = ?
+    WHERE id = ?
 `,
     [id]
   );
