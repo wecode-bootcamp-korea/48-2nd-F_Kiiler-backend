@@ -6,25 +6,21 @@ const categoryService = async (sortBy, brand, category, limit, offset) => {
       case 'price':
         return 'ORDER BY bb.price DESC';
       default:
-        return 'ORDER BY bb.price';
+        return 'ORDER BY bb.price ';
     }
   };
 
   const getCategory = async (brand, category) => {
-    if (!brand && !category) {
-      return '';
-    } else if (brand && !category) {
-      return `WHERE b.name in (${brand})`;
-    } else if (!brand && category) {
-      return `WHERE c.name in (${category})`;
-    } else {
-      return `WHERE b.name in (${brand}) AND c.name in (${category})`;
-    }
+    const brandClause = brand ? `b.name IN (${brand})` : '';
+    const categoryClause = category ? ` c.name IN (${category})` : '';
+
+    return [brandClause, categoryClause].filter(Boolean).join('AND');
   };
 
-  const getPage = async (limit, offset) => {
-    offset = (offset - 1) * limit;
-    return `LIMIT ${limit} OFFSET ${offset}`;
+  const getPage = (limit, offset) => {
+    limit = 8;
+    const page = (offset - 1) * limit;
+    return `LIMIT ${limit} OFFSET ${page}`;
   };
 
   const orderingQuery = await ordering(sortBy);

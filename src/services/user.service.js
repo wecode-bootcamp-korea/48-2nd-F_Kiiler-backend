@@ -12,7 +12,7 @@ const getUserById = async (id) => {
   return await userDao.getUserById(id);
 };
 
-const signUp = async (email, password) => {
+const signUp = async (email, password, agreeApp, agreeEmail, agreeSms) => {
   const emailRegex =
     /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
   const passwordRegex = /^(?=.{8,15})/;
@@ -33,12 +33,13 @@ const signUp = async (email, password) => {
 
   const hashedPassword = await hashPassword(password);
   const createUser = await userDao.createUser(
-  email, 
-  hashedPassword,
-  agreeApp,
-  agreeSms,
-  agreeEmail
+    email,
+    hashedPassword,
+    agreeApp,
+    agreeSms,
+    agreeEmail
   );
+  console.log(createUser);
   return createUser;
 };
 
