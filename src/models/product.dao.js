@@ -1,8 +1,8 @@
-const { AppDataSource } = require('./data.source')
+const { AppDataSource } = require('./data.source');
 
 const getProductDetailById = async (productId) => {
-    return await AppDataSource.query(
-      `
+  return await AppDataSource.query(
+    `
       SELECT 
           p.id as productId,
           b.name as brand,
@@ -20,14 +20,14 @@ const getProductDetailById = async (productId) => {
           product_images i ON p.id = i.product_id
       WHERE
           p.id = ?
-      `,
-      [productId]
-     );
+    `,
+    [productId]
+  );
 };
 
 const getRecentTradeDataById = async (productId) => {
-    const [recentTradeData] = await AppDataSource.query(
-     ` 
+  const [recentTradeData] = await AppDataSource.query(
+    ` 
       SELECT
           bid_product_size.id AS sizeId,
           s.type AS sizeType,
@@ -45,15 +45,15 @@ const getRecentTradeDataById = async (productId) => {
       ORDER BY
           totalOrderPrice ASC
       LIMIT 1
-     `,
-      [productId]
-    );
-    return recentTradeData
+    `,
+    [productId]
+  );
+  return recentTradeData;
 };
 
 const getBuyPrice = async (productId) => {
-    const [buyPrice] = await AppDataSource.query(
-     ` 
+  const [buyPrice] = await AppDataSource.query(
+    ` 
       SELECT p.id, 
           min(bb.price) AS price
       FROM 
@@ -76,15 +76,15 @@ const getBuyPrice = async (productId) => {
           b.name, 
           p.name, 
           pi.url
-     `,
-      [productId]
-    );
-    return buyPrice
+    `,
+    [productId]
+  );
+  return buyPrice;
 };
 
 const getSellPrice = async (productId) => {
-    const [sellPrice] = await AppDataSource.query(
-     ` 
+  const [sellPrice] = await AppDataSource.query(
+    ` 
       SELECT 
           p.id,
           max(bs.price) AS price
@@ -105,15 +105,40 @@ const getSellPrice = async (productId) => {
           p.id, 
           b.name, 
           p.name
-     `,
-      [productId]
-    );
-    return sellPrice
+    `,
+    [productId]
+  );
+  return sellPrice;
+};
+
+const getRecentPrice = async (productId) => {
+  const recentTradePrice = await AppDataSource.query(
+    `
+      SELECT
+          s.type AS sizeType,
+          JSON_OBJECT(
+            'latestPrice', COALESCE(SUM(o.price), 0),
+            'buyNowPrice', MIN(bb.price),
+            'sellNowPrice', MAX(bs.price)
+        ) AS priceData
+      FROM 
+          bid_product_size bp
+      LEFT JOIN orders o ON o.bid_product_size_id = bp.id
+      LEFT JOIN bid_buys bb ON bb.bid_product_size_id = bp.id
+      LEFT JOIN bid_sells bs ON bs.bid_product_size_id = bp.id
+      JOIN sizes s ON s.id = bp.size_id
+      WHERE bp.product_id = ?
+      GROUP BY 
+          s.type
+    `,
+    [productId]
+  );
+  return recentTradePrice;
 };
 
 const getTradeProductById = async (productId) => {
-    const allTradeData = await AppDataSource.query(
-     `
+  const allTradeData = await AppDataSource.query(
+    `
       SELECT
           s.type AS size,
           o.price AS tradePrice,
@@ -127,12 +152,12 @@ const getTradeProductById = async (productId) => {
       ORDER BY
           created_at DESC
       LIMIT 5
-      `,
-      [productId]
-    )
+    `,
+    [productId]
+  );
 
-    const allBidSellData = await AppDataSource.query(
-     `
+  const allBidSellData = await AppDataSource.query(
+    `
       SELECT 
           s.type AS size, 
           bs.price AS sellTargetPrice,
@@ -148,12 +173,12 @@ const getTradeProductById = async (productId) => {
       GROUP BY
           s.type, bs.price
       LIMIT 5
-      `,
-      [productId]
-    )
+    `,
+    [productId]
+  );
 
-    const allBidBuyData = await AppDataSource.query(
-     `
+  const allBidBuyData = await AppDataSource.query(
+    `
       SELECT 
           s.type AS size, 
           bb.price AS buyTargetPrice,
@@ -169,16 +194,24 @@ const getTradeProductById = async (productId) => {
       GROUP BY
           s.type, bb.price
       LIMIT 5
-      `,
-      [productId]
-    );
-        
-    const all = {
-            allTradeData,
-            allBidSellData,
-            allBidBuyData}
-            
-    return [all]
+    `,
+    [productId]
+  );
+
+  const all = {
+    allTradeData,
+    allBidSellData,
+    allBidBuyData,
+  };
+
+  return [all];
 };
 
-module.exports = { getProductDetailById, getBuyPrice, getSellPrice, getRecentTradeDataById, getTradeProductById }
+module.exports = {
+  getProductDetailById,
+  getBuyPrice,
+  getSellPrice,
+  getRecentPrice,
+  getRecentTradeDataById,
+  getTradeProductById,
+};
