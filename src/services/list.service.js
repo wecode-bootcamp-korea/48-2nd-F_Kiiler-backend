@@ -4,9 +4,9 @@ const categoryService = async (sortBy, brand, category, limit, offset) => {
   const ordering = async (sortBy) => {
     switch (sortBy) {
       case 'price':
-        return 'ORDER BY bb.price DESC';
+        return 'ORDER BY sub.price DESC';
       default:
-        return 'ORDER BY bb.price ';
+        return 'ORDER BY sub.price ';
     }
   };
 
