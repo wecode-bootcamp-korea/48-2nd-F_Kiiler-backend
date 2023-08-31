@@ -26,7 +26,7 @@ const getProductDetailById = async (productId) => {
 };
 
 const getRecentTradeDataById = async (productId) => {
-  const [recentTradeData] = await AppDataSource.query(
+  const recentTradeData = await AppDataSource.query(
     ` 
       SELECT
           bid_product_size.id AS sizeId,
@@ -52,7 +52,7 @@ const getRecentTradeDataById = async (productId) => {
 };
 
 const getBuyPrice = async (productId) => {
-  const [buyPrice] = await AppDataSource.query(
+  const buyPrice = await AppDataSource.query(
     ` 
       SELECT p.id, 
           min(bb.price) AS price
@@ -83,7 +83,7 @@ const getBuyPrice = async (productId) => {
 };
 
 const getSellPrice = async (productId) => {
-  const [sellPrice] = await AppDataSource.query(
+  const sellPrice = await AppDataSource.query(
     ` 
       SELECT 
           p.id,
@@ -147,8 +147,6 @@ const getTradeProductById = async (productId) => {
           orders o
       JOIN
           sizes s ON s.id = o.bid_product_size_id
-      WHERE 
-          o.id = ?
       ORDER BY
           created_at DESC
       LIMIT 5

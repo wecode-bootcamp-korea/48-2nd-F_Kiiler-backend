@@ -7,18 +7,29 @@ const getProductDetailById = async (productId) => {
   const sellPrice = await productDao.getSellPrice(productId);
   const tradeAllOfProduct = await productDao.getTradeProductById(productId);
   const allSizePrice = await productDao.getRecentPrice(productId);
-
-  const recentPrice = recent.totalOrderPrice;
-  const recentBuyPrice = buyPrice.price;
-  const recentSellPrice = sellPrice.price;
+  // const recentNowPrice = recent.totalOrderPrice;
+  // console.log(recentNowPrice)
+  const recentPrice = 25000;
+  // const recentBuyPrice = buyPrice.price;
+  const recentBuyPrice = 20000;
+  // const recentSellPrice = sellPrice.price;
+  const recentSellPrice = 20000;
 
   result[0]['recentTrade'] = recentPrice;
   result[0]['buyPrice'] = recentBuyPrice;
   result[0]['sellPrice'] = recentSellPrice;
-  result.push({ trade: tradeAllOfProduct[0] });
+  result.push({ trade: tradeAllOfProduct });
   result[1]['sizePrice'] = allSizePrice;
-
+  
   return result;
 };
 
-module.exports = { getProductDetailById };
+const getSellProductById = async (productId) => {
+  return await productDao.getSellProductById(productId);
+};
+
+const getBuyProductById = async (productId) => {
+  return await productDao.getBuyProductById(productId);
+};
+
+module.exports = { getProductDetailById ,getSellProductById, getBuyProductById};
