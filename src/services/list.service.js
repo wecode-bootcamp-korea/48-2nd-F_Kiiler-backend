@@ -11,10 +11,13 @@ const categoryService = async (sortBy, brand, category, limit, offset) => {
   };
 
   const getCategory = async (brand, category) => {
-    const brandClause = brand ? `b.name IN (${brand})` : '';
-    const categoryClause = category ? ` c.name IN (${category})` : '';
-
-    return [brandClause, categoryClause].filter(Boolean).join('AND');
+    return !brand && !category
+      ? ''
+      : brand && !category
+      ? `WHERE b.name IN (${brand})`
+      : !brand && category
+      ? `WHERE c.name IN (${category})`
+      : `WHERE b.name IN (${brand}) AND c.name IN (${category})`;
   };
 
   const getPage = (limit, offset) => {
