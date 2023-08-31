@@ -15,6 +15,7 @@ const getProductDetailById = async (productId) => {
   // const recentSellPrice = sellPrice.price;
   const recentSellPrice = 20000;
 
+ 
   result[0]['recentTrade'] = recentPrice;
   result[0]['buyPrice'] = recentBuyPrice;
   result[0]['sellPrice'] = recentSellPrice;
