@@ -5,8 +5,6 @@ const getProductsByCategorylist = async (
   whereQuery,
   pageQuery
 ) => {
-  console.log('orderingQuery : ', orderingQuery);
-  console.log('pageQuery : ', pageQuery);
   const list = await AppDataSource.query(`
   SELECT sub.productId, sub.brand, sub.name, sub.url, sub.price
   FROM (

@@ -39,7 +39,6 @@ const signUp = async (email, password, agreeApp, agreeEmail, agreeSms) => {
     agreeSms,
     agreeEmail
   );
-  console.log(createUser);
   return createUser;
 };
 
