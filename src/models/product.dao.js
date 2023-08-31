@@ -115,21 +115,21 @@ const getRecentPrice = async (productId) => {
   const recentTradePrice = await AppDataSource.query(
     `
       SELECT
-          s.type AS sizeType,
-          JSON_OBJECT(
-            'latestPrice', COALESCE(SUM(o.price), 0),
-            'buyNowPrice', MIN(bb.price),
-            'sellNowPrice', MAX(bs.price)
-        ) AS priceData
-      FROM 
-          bid_product_size bp
-      LEFT JOIN orders o ON o.bid_product_size_id = bp.id
-      LEFT JOIN bid_buys bb ON bb.bid_product_size_id = bp.id
-      LEFT JOIN bid_sells bs ON bs.bid_product_size_id = bp.id
-      JOIN sizes s ON s.id = bp.size_id
-      WHERE bp.product_id = ?
-      GROUP BY 
-          s.type
+            s.type AS sizeType,
+            JSON_OBJECT(
+                'latestPrice', COALESCE(SUM(o.price), 0),
+                'buyNowPrice', MIN(bb.price),
+                'sellNowPrice', MAX(bs.price)
+            ) AS priceData
+        FROM 
+            bid_product_size bp
+        LEFT JOIN orders o ON o.bid_product_size_id = bp.id
+        LEFT JOIN bid_buys bb ON bb.bid_product_size_id = bp.id
+        LEFT JOIN bid_sells bs ON bs.bid_product_size_id = bp.id
+        JOIN sizes s ON s.id = bp.size_id
+        WHERE bp.product_id = ?
+        GROUP BY 
+            s.type
     `,
     [productId]
   );

@@ -15,7 +15,7 @@ const getProductDetailById = async (productId) => {
   result[0]['recentTrade'] = recentPrice;
   result[0]['buyPrice'] = recentBuyPrice;
   result[0]['sellPrice'] = recentSellPrice;
-  result.push({ trade: tradeAllOfProduct });
+  result.push({ trade: tradeAllOfProduct[0] });
   result[1]['sizePrice'] = allSizePrice;
 
   return result;
