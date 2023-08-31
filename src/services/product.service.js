@@ -15,7 +15,6 @@ const getProductDetailById = async (productId) => {
   // const recentSellPrice = sellPrice.price;
   const recentSellPrice = 20000;
 
- 
   result[0]['recentTrade'] = recentPrice;
   result[0]['buyPrice'] = recentBuyPrice;
   result[0]['sellPrice'] = recentSellPrice;
@@ -25,12 +24,4 @@ const getProductDetailById = async (productId) => {
   return result;
 };
 
-const getSellProductById = async (productId) => {
-  return await productDao.getSellProductById(productId);
-};
-
-const getBuyProductById = async (productId) => {
-  return await productDao.getBuyProductById(productId);
-};
-
-module.exports = { getProductDetailById ,getSellProductById, getBuyProductById};
+module.exports = { getProductDetailById };
