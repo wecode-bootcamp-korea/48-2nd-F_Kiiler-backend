@@ -5,6 +5,7 @@ const { catchAsync } = require('../utils/error');
 const getSellList = catchAsync(async (req, res) => {
   const productId = req.params.id;
   const size = req.query.size;
+
   const result = size
     ? await sellDao.getSellSizeList(productId, size)
     : await sellDao.getSellList(productId);
