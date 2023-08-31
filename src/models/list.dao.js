@@ -5,6 +5,7 @@ const getProductsByCategorylist = async (
   whereQuery,
   pageQuery
 ) => {
+  console.log(orderingQuery);
   const list = await AppDataSource.query(`
   SELECT sub.productId, sub.brand, sub.name, sub.url, sub.price
   FROM (
@@ -19,10 +20,10 @@ const getProductsByCategorylist = async (
       LEFT JOIN bid_buys bb ON bb.bid_product_size_id = bps.id
       ${whereQuery}
       GROUP BY p.id
-      HAVING price IS NOT NULL
-      ${orderingQuery}
-      ${pageQuery} 
-  ) AS sub;
+      HAVING price IS NOT NULL 
+  ) AS sub
+  ${orderingQuery}
+  ${pageQuery}
   `);
   return list;
 };

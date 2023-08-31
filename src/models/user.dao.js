@@ -1,10 +1,10 @@
 const { AppDataSource } = require('./data.source');
 
 const createUser = async (
-  email,
+  email, 
   hashedPassword,
   agreeApp,
-  agreeSms,
+  agreeSms, 
   agreeEmail
 ) => {
   await AppDataSource.query(
