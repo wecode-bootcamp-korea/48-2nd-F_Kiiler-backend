@@ -1,6 +1,7 @@
 const express = require('express');
 
-const { bidRouter } = require('./bid.router');
+const { bidBuyRouter } = require('./bid.buy.router');
+const { bidSellRouter } = require('./bid.sell.router');
 const { buyRouter } = require('./buy.router');
 const { listRouter } = require('./list.router');
 const { sellRouter } = require('./sell.router');
@@ -9,7 +10,8 @@ const { userRouter } = require('./user.router');
 const routes = express.Router();
 
 routes.use('/user', userRouter);
-routes.use('/bid', bidRouter);
+routes.use('/bidsell', bidSellRouter);
+routes.use('/bidbuy', bidBuyRouter);
 routes.use('/sell', sellRouter);
 routes.use('/buy', buyRouter);
 routes.use('/product', listRouter);

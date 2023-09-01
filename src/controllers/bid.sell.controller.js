@@ -2,14 +2,18 @@ const bidSellService = require('../services/bid.sell.service');
 const { catchAsync } = require('../utils/error');
 
 const insertBidSellWaiting = catchAsync(async (req, res) => {
-  const { sellerId, productId, size, price } = req.body;
+  const { productId, size, price } = req.body;
+  const user = req.user;
   const bidSell = await bidSellService.insertBidSellWaiting(
-    sellerId,
+    user.id,
     productId,
     size,
     price
   );
-  res.status(201).json({ data: bidSell });
+  let arr = [];
+  let object = { id: bidSell };
+  arr.push(object);
+  res.status(201).json({ data: arr });
 });
 
 const getBidSell = catchAsync(async (req, res) => {
@@ -19,9 +23,10 @@ const getBidSell = catchAsync(async (req, res) => {
 });
 
 const insertBidSellOrOrder = catchAsync(async (req, res) => {
-  const { sellerId, productId, size, price, orderPrice, point } = req.body;
+  const { productId, size, price, orderPrice, point } = req.body;
+  const user = req.user;
   const bidSellOrOrder = await bidSellService.insertBidSellOrOrder(
-    sellerId,
+    user.id,
     productId,
     size,
     price,

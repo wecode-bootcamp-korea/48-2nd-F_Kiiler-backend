@@ -10,7 +10,11 @@ const insertBidBuyWaiting = catchAsync(async (req, res) => {
     size,
     price
   );
-  res.status(201).json({ data: bidBuy });
+  let arr = [];
+  let object = { id: bidBuy };
+  arr.push(object);
+
+  res.status(201).json({ data: arr });
 });
 
 const getBidBuy = catchAsync(async (req, res) => {
@@ -21,7 +25,7 @@ const getBidBuy = catchAsync(async (req, res) => {
 
 const insertBidBuyOrOrder = catchAsync(async (req, res) => {
   const { productId, size, price, orderPrice, point } = req.body;
-  const user = reg.user;
+  const user = req.user;
   const bidBuyOrOrder = await bidBuyService.insertBidBuyOrOrder(
     user.id,
     productId,

@@ -3,9 +3,9 @@ const { bidStatusEnum } = require('../models/enums');
 const uuid = require('uuid');
 
 const searchBidProductSize = async (productId, size) => {
-  const [getSizeId] = await bidSellDao.getSizeId(size);
+  const [getSizeId] = await bidBuyDao.getSizeId(size);
   const sizeId = getSizeId.id;
-  const [bidProductSizeId] = await bidSellDao.searchBidProductSize(
+  const [bidProductSizeId] = await bidBuyDao.searchBidProductSize(
     productId,
     sizeId
   );
@@ -79,18 +79,17 @@ const insertBidBuyOrOrder = async (
 ) => {
   let status = bidStatusEnum.WAIT_CONFIRMED;
   const bidProductSizeId = await searchBidProductSize(productId, size);
-  const existingBidBuyInfo = await existingBidSell(
+  const existingBidSellInfo = await existingBidSell(
     status,
     bidProductSizeId,
     price
   );
-  const existingBidSellInfo = await existingBidBuy(
+  const existingBidBuyInfo = await existingBidBuy(
     buyerId,
     status,
     bidProductSizeId,
     price
   );
-
   let bidSellId;
   let bidSellerId;
   let bidBuyId = existingBidSellInfo;
