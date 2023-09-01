@@ -93,7 +93,6 @@ const modifyAndInsertBidBuy = async (
 };
 
 const insertOnlyBidBuy = async (buyerId, bidProductSizeId, status, price) => {
-  console.log(buyerId, bidProductSizeId, status, price);
   const queryRunner = await AppDataSource.createQueryRunner();
   await queryRunner.connect();
   await queryRunner.startTransaction();

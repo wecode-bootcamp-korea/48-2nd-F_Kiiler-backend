@@ -4,14 +4,16 @@ const { catchAsync } = require('../utils/error');
 const insertBidSellWaiting = catchAsync(async (req, res) => {
   const { productId, size, price } = req.body;
   const user = req.user;
-
   const bidSell = await bidSellService.insertBidSellWaiting(
     user.id,
     productId,
     size,
     price
   );
-  res.status(201).json({ data: bidSell });
+  let arr = [];
+  let object = { id: bidSell };
+  arr.push(object);
+  res.status(201).json({ data: arr });
 });
 
 const getBidSell = catchAsync(async (req, res) => {
