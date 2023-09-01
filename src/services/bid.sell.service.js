@@ -40,7 +40,6 @@ const insertBidSellWaiting = async (sellerId, productId, size, price) => {
     price
   );
   status = bidStatusEnum.WAIT_CONFIRMED;
-
   let bidSellId;
   if (existingBidBuyInfo) {
     const bidBuyId = existingBidBuyInfo.id;
@@ -59,7 +58,7 @@ const insertBidSellWaiting = async (sellerId, productId, size, price) => {
       status,
       price
     );
-    bidSellId = insertOnlyBidSell;
+    bidSellId = insertOnlyBidSell.insertId;
   }
   return bidSellId;
 };

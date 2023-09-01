@@ -37,7 +37,6 @@ const existingBidBuyInfo = async (status, bidProductSizeId, price) => {
       limit 1`,
     [status, bidProductSizeId, price]
   );
-
   return bidBuyInfo;
 };
 
@@ -87,7 +86,8 @@ const modifyAndInsertBidSell = async (
       [sellerId, bidProductSizeId, status, price]
     );
     await queryRunner.commitTransaction();
-    return bidSellId.insertId;
+    console.log(bidSellId);
+    return bidSellId;
   } catch {
     await queryRunner.rollbackTransaction();
     const err = new Error('INVALID_DATA');
@@ -111,7 +111,7 @@ const insertOnlyBidSell = async (sellerId, bidProductSizeId, status, price) => {
       [sellerId, bidProductSizeId, status, price]
     );
     await queryRunner.commitTransaction();
-    return bidSellId.insertId;
+    return bidSellId;
   } catch {
     await queryRunner.rollbackTransaction();
     const err = new Error('INVALID_DATA');
@@ -212,7 +212,7 @@ const getBidSell = async (bidSellId) => {
       users.nickname AS sellerName, 
       users.point , 
       products.name AS product,  
-      products.serial_number, 
+      products.serial_number AS serialNumber, 
       sizes.type,  bid_sells.price,  
       product_images.url 
       from bid_sells 
