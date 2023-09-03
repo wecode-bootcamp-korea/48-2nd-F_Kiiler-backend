@@ -44,14 +44,14 @@ const insertBidBuyWaiting = async (buyerId, productId, size, price) => {
   let bidBuyId;
   if (existingBidSellInfo) {
     const bidSellId = existingBidSellInfo.id;
-    const modifyAndInsertBidSell = await bidBuyDao.modifyAndInsertBidBuy(
+    const modifyAndInsertBidBuy = await bidBuyDao.modifyAndInsertBidBuy(
       bidSellId,
       buyerId,
       bidProductSizeId,
       status,
       price
     );
-    bidBuyId = modifyAndInsertBidSell;
+    bidBuyId = modifyAndInsertBidBuy.insertId;
   } else if (!existingBidSellInfo) {
     const insertOnlyBidBuy = await bidBuyDao.insertOnlyBidBuy(
       buyerId,
@@ -59,7 +59,7 @@ const insertBidBuyWaiting = async (buyerId, productId, size, price) => {
       status,
       price
     );
-    bidBuyId = insertOnlyBidBuy;
+    bidBuyId = insertOnlyBidBuy.insertId;
   }
   return bidBuyId;
 };
@@ -90,6 +90,7 @@ const insertBidBuyOrOrder = async (
     bidProductSizeId,
     price
   );
+
   let bidSellId;
   let bidSellerId;
   let bidBuyId = existingBidSellInfo;

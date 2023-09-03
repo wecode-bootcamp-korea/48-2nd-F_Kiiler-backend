@@ -117,7 +117,7 @@ const getRecentPrice = async (productId) => {
       SELECT
             s.type AS sizeType,
             JSON_OBJECT(
-                'latestPrice', COALESCE(SUM(o.price), 0),
+                'latestPrice', COALESCE(o.price,0),
                 'buyNowPrice', MIN(bb.price),
                 'sellNowPrice', MAX(bs.price)
             ) AS priceData

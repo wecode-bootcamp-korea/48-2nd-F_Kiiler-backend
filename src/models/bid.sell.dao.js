@@ -86,7 +86,6 @@ const modifyAndInsertBidSell = async (
       [sellerId, bidProductSizeId, status, price]
     );
     await queryRunner.commitTransaction();
-    console.log(bidSellId);
     return bidSellId;
   } catch {
     await queryRunner.rollbackTransaction();
@@ -211,9 +210,11 @@ const getBidSell = async (bidSellId) => {
     `select 
       users.nickname AS sellerName, 
       users.point , 
+      products.id AS productId,
       products.name AS product,  
       products.serial_number AS serialNumber, 
-      sizes.type,  bid_sells.price,  
+      sizes.type,  
+      bid_sells.price,  
       product_images.url 
       from bid_sells 
       left join bid_product_size 

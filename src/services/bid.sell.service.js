@@ -28,6 +28,7 @@ const existingBidSell = async (sellerId, status, bidProductSizeId, price) => {
     bidProductSizeId,
     price
   );
+  console;
   return bidSellInfo;
 };
 
@@ -50,7 +51,7 @@ const insertBidSellWaiting = async (sellerId, productId, size, price) => {
       status,
       price
     );
-    bidSellId = modifyAndInsertBidSell;
+    bidSellId = modifyAndInsertBidSell.insertId;
   } else if (!existingBidBuyInfo) {
     const insertOnlyBidSell = await bidSellDao.insertOnlyBidSell(
       sellerId,
@@ -89,10 +90,9 @@ const insertBidSellOrOrder = async (
     bidProductSizeId,
     price
   );
-
   let bidBuyId;
   let bidBuyerId;
-  let bidSellId = existingBidSellInfo;
+  let bidSellId = existingBidSellInfo.id;
   status = bidStatusEnum.ORDER_CONFIRMED;
 
   if (existingBidBuyInfo) {

@@ -3,7 +3,7 @@ const { AppDataSource } = require('./data.source');
 const getSellList = async (prodcutId) => {
   const sell = await AppDataSource.query(
     `SELECT 
-        bps.id, 
+        bps.size_id as id, 
         p.name,
         p.serial_number AS serialNumber,
         pi.url,
@@ -29,7 +29,7 @@ const getSellList = async (prodcutId) => {
 const getSellSizeList = async (prodcutId, size) => {
   const sell = await AppDataSource.query(
     `SELECT 
-          bps.id, 
+          bps.product_id AS productId, 
           p.name,
           p.serial_number as serialNumber,
           pi.url,
