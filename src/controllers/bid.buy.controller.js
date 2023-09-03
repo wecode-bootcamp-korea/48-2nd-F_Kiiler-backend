@@ -13,7 +13,6 @@ const insertBidBuyWaiting = catchAsync(async (req, res) => {
   let arr = [];
   let object = { id: bidBuy };
   arr.push(object);
-
   res.status(201).json({ data: arr });
 });
 
