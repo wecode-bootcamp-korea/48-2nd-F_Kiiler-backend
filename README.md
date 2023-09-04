@@ -8,8 +8,10 @@
 
  #### 기획 의도
  한정판을 좋아하는 Z세대들에게 활발한 소비 및 투자로 리셀 스니커즈 시장을 확대하는 서비스를 기획
+ 
  #### 서비스 개요
  KREAM은 리셀이라는 새로운 소비 트렌드를 캐치한 한정판 스니커즈 거래 중개 서비스로, 단순한 중개에서 벗어나 패션을 즐기는 고객들이 입찰 문화를 통해 소통할 수 있는 플랫폼
+ 
  #### 핵심 기능
  회원가입
  - 비밀번호 암호화
@@ -23,8 +25,10 @@
  - 쿼리 빌더 사용
  - 정렬, 필터링, 페이징 구현
 
+ 상세페이지
+ - 상품 정보 및 체결거래, 판매입찰, 구매입찰 데이터 전달
+
  
- - 
 ## ⚙️ 기술 스택
 ### Frontend
 [![stackticon](https://firebasestorage.googleapis.com/v0/b/stackticon-81399.appspot.com/o/images%2F1693791891735?alt=media&token=f38ca43a-35de-42fa-8e02-e0b4b0e5efa4)](https://github.com/msdio/stackticon)
